@@ -87,11 +87,14 @@ class Application(models.Model):
 
 @receiver(pre_save, sender=Application)
 def _post_save_receiver(sender, instance,  **kwargs):
+    job = Job.objects.get(pk=instance.job.pk)
     if instance.selected:
-        job = Job.objects.get(pk=instance.job.pk)
         if job.vacancy > 0:
             job.vacancy -= 1
             job.save()
         else:
             instance.selected = False
+    else:
+        job.vacancy += 1
+        job.save()
 

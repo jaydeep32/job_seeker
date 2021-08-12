@@ -68,7 +68,7 @@
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ application.profile.user.username }}</td>
                                                 <td>{{ application.selected|yesno:"Yeah,No,maybe" }}</td>
-                                                <td><a href="{{ application.profile.resume.url }}">Download</a></td>
+                                                <td><a href="{{ application.profile.resume.url }}">View</a></td>
                                                 <td><a href="{% url 'job:select-candidate' job.slug application.id %}" class="genric-btn primary-border circle">
                                                     {% if application.selected %}
                                                         Reject
