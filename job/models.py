@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.utils import timezone
 from user.models import Profile
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 
@@ -75,4 +75,23 @@ class Job(models.Model):
     def __str__(self):
         return self.job_name
 
+
+class Application(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications')
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    selected = models.BooleanField(default=False)
+    apply_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.job.job_name} - {self.profile.user.username}'
+
+@receiver(pre_save, sender=Application)
+def _post_save_receiver(sender, instance,  **kwargs):
+    if instance.selected:
+        job = Job.objects.get(pk=instance.job.pk)
+        if job.vacancy > 0:
+            job.vacancy -= 1
+            job.save()
+        else:
+            instance.selected = False
 

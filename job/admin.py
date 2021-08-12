@@ -1,5 +1,5 @@
 from django.contrib import admin
-from job.models import Category, Company, Job
+from job.models import Category, Company, Job, Application
 
 
 @admin.register(Category)
@@ -14,5 +14,10 @@ class JobAdmin(admin.ModelAdmin):
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Application)
+class ApplicationAdmin(admin.ModelAdmin):
     pass
 

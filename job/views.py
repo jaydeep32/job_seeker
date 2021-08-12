@@ -1,7 +1,8 @@
 from django.db.models.query import InstanceCheckMeta
 from django.shortcuts import render
+from django.contrib import messages 
 from django.contrib.auth.decorators import login_required
-from job.models import Category, Company, Job
+from job.models import Category, Company, Job, Application
 from job.decorators import *
 from job.forms import JobForm, CompanyForm
 from user.models import Profile
@@ -30,10 +31,14 @@ def post_listing(request, slug=None):
 
 
 @login_required
+@allow_user
 def post_detail(request, slug):
     job = Job.objects.filter(slug=slug).first()
+    applications = Application.objects.filter(job=job, profile=request.user.profile)
+    applied = True if applications.exists() else False
     context = {
         'job': job,
+        'applied': applied,
     }
     return render(request, 'job/job_details.html', context)
 
@@ -90,3 +95,46 @@ def company_detail(request):
         'profile': profile,
     }
     return render(request, 'job/company_details.html', context)
+
+
+@login_required
+@allow_company
+def application_detail(request, slug):
+    job = Job.objects.filter(slug=slug).first()
+    applications = job.applications.all()
+    context = {
+        'job': job,
+        'applications': applications,
+    }
+    return render(request, 'job/application_details.html', context)
+
+
+@login_required
+@allow_company
+def select_candidate(request, slug, pk):
+    try:
+        application = Application.objects.get(pk=pk)
+    except:
+        return redirect('job:home') 
+    application.selected = not application.selected
+    application.save()
+    return redirect('job:application-detail', slug=slug)
+    
+
+
+@login_required
+@allow_user
+def apply_job(request, slug):
+    try:
+        job = Job.objects.get(slug=slug)
+    except:
+        return redirect('job:home') 
+    profile = Profile.objects.get(user=request.user)
+    if profile.resume:
+        app, _ = Application.objects.get_or_create(job=job, profile=request.user.profile)
+    else:
+        messages.error(request, "Add resume first and then apply for job!!")
+        return redirect('user:profile')
+    return redirect('job:post-detail', slug=slug)
+
+

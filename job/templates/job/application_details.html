@@ -49,11 +49,42 @@
                             <div class="post-details1 mb-50">
                                 <!-- Small Section Tittle -->
                                 <div class="small-section-tittle">
-                                    <h4>Job Description</h4>
+                                    <h4>{{ applications|length }} Applicant{{ applications|pluralize }} </h4>
                                 </div>
-                                <p>
-                                    {{ job.description }}
-                                </p>
+                                <div class="">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Username</th>
+                                                <th scope="col">Selected</th>
+                                                <th scope="col">resume</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for application in applications %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ application.profile.user.username }}</td>
+                                                <td>{{ application.selected|yesno:"Yeah,No,maybe" }}</td>
+                                                <td><a href="{{ application.profile.resume.url }}">Download</a></td>
+                                                <td><a href="{% url 'job:select-candidate' job.slug application.id %}" class="genric-btn primary-border circle">
+                                                    {% if application.selected %}
+                                                        Reject
+                                                    {% else %}
+                                                        Select
+                                                    {% endif %}
+                                                </a></td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="7" class="text-center">None</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
@@ -74,14 +105,7 @@
                               <li>Last date : <span>{{ job.last_date|date:'d M Y'}}</span></li>
                               <li>Time Left : <span>{{ job.posted_date|timesince:job.last_date }}</span></li>
                           </ul>
-                         <div class="apply-btn2">
-                            {% if applied %}
-                                <a href="#" class="btn disabled">Already Applied</a>
-                            {% else %}
-                                <a href="{% url 'job:job-apply' job.slug %}" class="btn">Apply Now</a>
-                            {% endif %}
-                         </div>
-                       </div>
+                        </div>
                         <div class="post-details4  mb-50">
                             <!-- Small Section Tittle -->
                            <div class="small-section-tittle">

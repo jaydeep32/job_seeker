@@ -15,4 +15,8 @@ urlpatterns = [
     path('company-add/', views.add_company, name='add-company'),
     path('company-add/<int:pk>/', views.add_company, name='update-company'),
     path('company-detail/', views.company_detail, name='company-detail'),
+
+    path('job-apply/<str:slug>/', views.apply_job, name='job-apply'),
+    path('application-detail/<str:slug>/', views.application_detail, name='application-detail'),
+    path('select-candidate/<str:slug>/<int:pk>/', views.select_candidate, name='select-candidate'),
 ]

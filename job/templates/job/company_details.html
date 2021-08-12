@@ -50,8 +50,8 @@
             </div>
             <!-- Right Content -->
             {% for company in companies %}
-                <div class="col-xl-12 col-lg-12">
-                    <div class="post-details3  mb-50">
+            <div class="col-xl-12 col-lg-12">
+                <div class="post-details3  mb-50">
                         <div class="col col-md-12">
                             <div class="post-details4  mb-50">
                                 <!-- Small Section Tittle -->
@@ -68,36 +68,53 @@
                         <!-- Small Section Tittle -->
                         <hr>
                         <div class="row">
-                        {% for job in company.jobs.all %}
-                            <div class="col col-md-4 pt-5">
+                            <div class="col col-md-12 pt-5">
                                 <div class="small-section-tittle">
                                     <h4>Job Overview</h4>
                                 </div>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Job Name</th>
+                                            <th scope="col">Posted date</th>
+                                            <th scope="col">Location</th>
+                                            <th scope="col">Vacancy</th>
+                                            <th scope="col">Time Left</th>
+                                            <th scope="col">No of applicant</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for job in company.jobs.all %}
+                                        <tr>
+                                            <td>{{ job.job_name }}</td>
+                                            <td>{{ job.posted_date|date:'d M Y'}}</td>
+                                            <td>{{ job.location }}</td>
+                                            <td>{{ job.vacancy }}</td>
+                                            <td>{{ job.posted_date|timesince:job.last_date }}</td>
+                                            <td>{{ job.applications.count }}</td>
+                                            <td><a href="{% url 'job:application-detail' job.slug %}" class="genric-btn danger-border circle">See more</a></td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">None</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                                 <ul>
-                                    <li>Posted date : <span>{{ job.posted_date|date:'d M Y'}}</span></li>
-                                    <li>Location : <span>{{ job.location }}</span></li>
-                                    <li>Vacancy : <span>{{ job.vacancy }}</span></li>
-                                    <li>Job nature : <span>{{ job.job_time }}</span></li>
-                                    <li>Salary :  <span>${{ job.min_salary }} - {{ job.max_salary }} {{ job.salary_type|title }}</span></li>
-                                    <li>Last date : <span>{{ job.last_date|date:'d M Y'}}</span></li>
-                                    <li>Time Left : <span>{{ job.posted_date|timesince:job.last_date }}</span></li>
                                 </ul>
                                 <div class="apply-btn2">
-                                    <a href="#" class="btn">Apply Now</a>
                                 </div>
                             </div>
-                        {% empty %}
-                            <div class="col col-md-12 text-center">
-                                <p class="text-secondary">None</p>
-                            </div>
-                        {% endfor %}
-                    </div>
                     </div>
                 </div>
+            </div>
+            <hr>
             {% endfor %}
         </div>
     </div>
     <!-- job post company End -->
-
+    
 </main>
 {% endblock content %}
