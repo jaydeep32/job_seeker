@@ -18,6 +18,14 @@
                 </div>
             </div>
         </div>
+
+        {% for message in messages %}
+            <div class="alert alert-danger mt-5" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <strong>{{ message.tags }}!</strong> {{ message }}
+            </div>
+        {% endfor %}
         <!-- Hero Area End -->
         <!-- Job List Area Start -->
         <div class="job-listing-area pt-120 pb-120">
@@ -49,28 +57,30 @@
                                 </div>
                                 <!-- Count of Job list End -->
                                 {% for job in jobs %}
-                                    <!-- single-job-content -->
-                                    <div class="single-job-items mb-30">
-                                        <div class="job-items">
-                                            <div class="company-img">
-                                                <a href="{% url 'job:post-detail' job.slug %}"><img src="{% static 'img/icon/job-list1.png'%}" alt=""></a>
+                                    {% if job.vacancy > 0 %}
+                                        <!-- single-job-content -->
+                                        <div class="single-job-items mb-30">
+                                            <div class="job-items">
+                                                <div class="company-img">
+                                                    <a href="{% url 'job:post-detail' job.slug %}"><img src="{% static 'img/icon/job-list1.png'%}" alt=""></a>
+                                                </div>
+                                                <div class="job-tittle job-tittle2">
+                                                    <a href="{% url 'job:post-detail' job.slug %}">
+                                                        <h4>{{ job.job_name|title }}</h4>
+                                                    </a>
+                                                    <ul>
+                                                        <li>{{ job.category.category_name|title }}</li>
+                                                        <li><i class="fas fa-map-marker-alt"></i>{{ job.location }}</li>
+                                                        <li>${{ job.min_salary}} - ${{ job.max_salary }}</li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                            <div class="job-tittle job-tittle2">
-                                                <a href="{% url 'job:post-detail' job.slug %}">
-                                                    <h4>{{ job.job_name|title }}</h4>
-                                                </a>
-                                                <ul>
-                                                    <li>{{ job.category.category_name|title }}</li>
-                                                    <li><i class="fas fa-map-marker-alt"></i>{{ job.location }}</li>
-                                                    <li>${{ job.min_salary}} - ${{ job.max_salary }}</li>
-                                                </ul>
+                                            <div class="items-link items-link2 f-right">
+                                                <a href="{% url 'job:post-detail' job.slug %}">{{ job.job_time }}</a>
+                                                <span>{{ job.posted_date|timesince }}</span>
                                             </div>
                                         </div>
-                                        <div class="items-link items-link2 f-right">
-                                            <a href="{% url 'job:post-detail' job.slug %}">{{ job.job_time }}</a>
-                                            <span>{{ job.posted_date|timesince }}</span>
-                                        </div>
-                                    </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </section>

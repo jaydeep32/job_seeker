@@ -1,11 +1,12 @@
-from django.db.models.query import InstanceCheckMeta
 from django.shortcuts import render
+from django.urls import reverse
 from django.contrib import messages 
 from django.contrib.auth.decorators import login_required
 from job.models import Category, Company, Job, Application
 from job.decorators import *
 from job.forms import JobForm, CompanyForm
 from user.models import Profile
+from urllib.parse import quote
 
 
 def index(request):
@@ -126,16 +127,21 @@ def select_candidate(request, slug, pk):
 @login_required
 @allow_user
 def apply_job(request, slug):
+    current_url = quote(request.get_full_path())
     try:
         job = Job.objects.get(slug=slug)
     except:
         return redirect('job:home') 
     profile = Profile.objects.get(user=request.user)
     if profile.resume:
-        app, _ = Application.objects.get_or_create(job=job, profile=request.user.profile)
+        if job.vacancy > 0:
+            app, _ = Application.objects.get_or_create(job=job, profile=request.user.profile)
+        else:
+            messages.error(request, " There is no vacancy available.")
+            return redirect('job:post-listing-all')
     else:
-        messages.error(request, "Add resume first and then apply for job!!")
-        return redirect('user:profile')
+        messages.error(request, " You don't have a resume first upload resume and then apply for this job.")
+        return redirect(reverse('user:profile') + f'?next={current_url}')
     return redirect('job:post-detail', slug=slug)
 
 

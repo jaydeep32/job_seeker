@@ -34,12 +34,13 @@ def custome_register(request):
 
 @login_required
 def profile(request):
+    next_url = request.GET.get('next')
     profile = Profile.objects.get(user=request.user)
     form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect("user:profile")
+            return redirect(next_url)
     context = {
         'form': form,
         'profile': profile,
