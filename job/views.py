@@ -116,8 +116,9 @@ def select_candidate(request, slug, pk):
         application = Application.objects.get(pk=pk)
     except:
         return redirect('job:home') 
-    application.selected = True
-    application.save()
+    if not application.selected:
+        application.selected = True
+        application.save()
     return redirect('job:application-detail', slug=slug)
     
 
