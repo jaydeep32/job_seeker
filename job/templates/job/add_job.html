@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Area Start-->
+<div class="slider-area ">
+    <div class="single-slider section-overly slider-height2 d-flex align-items-center"
+        data-background="{% static 'img/hero/about.jpg'%}">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2>Add a job</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero Area End -->
+
+<!--================Login Box Area =================-->
+<section class="contact-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="contact-title">{{ "fill in job details."|title }}</h2>
+            </div>
+            <div class="col-lg-7">
+                <form class="form-contact contact_form" action=" " method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <table cellpadding=10 class='table'>
+                            {{ form.as_table }}
+                        </table>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button type="submit" class="button button-contactForm boxed-btn">Save</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-4 offset-lg-1">
+                <div class="card mt-3">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-center align-items-center flex-wrap">
+                            <h3 class="mb-1">
+                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><title>bank-buidling-flat</title><path d="M256,510.4C116.1,510.4,2.28,396.28,2.28,256S116.1,1.6,256,1.6,509.72,115.73,509.72,256,395.9,510.4,256,510.4Z" fill="none" stroke="#131313" stroke-miterlimit="10" stroke-width="4.56"/><ellipse cx="256" cy="256" rx="217.71" ry="218.3" fill="#131313"/><path d="M338.45,343.59c0-.19.07-.36.07-.56V337.4c0-4-4.22-7.22-9.69-7.71V218.89H299.2V329.6H272.3V218.89H242.65V329.6H215.74V218.89H186.09V329.66c-5.75.28-10.26,3.61-10.26,7.74V343a6.33,6.33,0,0,0,.19,1.5c-3.22,1.51-5.36,4.09-5.36,7v6.11c0,4.67,5.35,8.43,11.93,8.43H334.68c6.58,0,11.91-3.76,11.91-8.43v-6.11C346.6,347.85,343.2,344.71,338.45,343.59Z" fill="#ede9e2"/><path d="M346.22,195.56,321.1,180.42l-26.66-16.08-25.1-15.14c-7.33-4.42-19.34-4.42-26.66,0l-25.1,15.14-26.66,16.08-25.13,15.14c-7.33,4.42-6.33,8,2.24,8h18.07v10.12h29.65V203.59h26.91v10.12H272.3V203.59H299.2v10.12h29.63V203.59H344C352.55,203.59,353.54,200,346.22,195.56Zm-90.66-33a12.95,12.95,0,1,1-12.91,12.95A12.92,12.92,0,0,1,255.56,162.52Z" fill="#ede9e2"/></svg>
+                                Jobs
+                            </h3>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                            <span class="text-dark h6">Company Name </span>
+                            <span class="text-dark h6">Job Name<span>
+                        </li>
+                        {% for job in jobs %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <span class="text-secondary">{{ job.company.company_name }}: </span>
+                                <span class="text-secondary">
+                                    <a href="{% url 'job:update-job' job.slug %}">{{ job.job_name }}</a>
+                                <span>
+                            </li>
+                        {% empty %}
+                            <span class="text-secondary">None</span>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+<!--================End Login Box Area =================-->
+{% endblock content %}
