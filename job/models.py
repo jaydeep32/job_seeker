@@ -94,7 +94,4 @@ def _post_save_receiver(sender, instance,  **kwargs):
             job.save()
         else:
             instance.selected = False
-    else:
-        job.vacancy += 1
-        job.save()
 
